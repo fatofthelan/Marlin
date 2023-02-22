@@ -1036,7 +1036,7 @@
 #define ASSISTED_TRAMMING  // Tobias
 #if ENABLED(ASSISTED_TRAMMING)
 
-  // Define positions for probe points.
+  // Define from 3 to 9 points to probe.
   #define TRAMMING_POINT_XY { {  20, 20 }, { 180,  20 }, { 180, 180 }, { 20, 180 } }
 
   // Define position names for probe points.
@@ -1461,6 +1461,9 @@
 
   // Show the E position (filament used) during printing
   //#define LCD_SHOW_E_TOTAL
+
+  // Display a negative temperature instead of "err"
+  //#define SHOW_TEMPERATURE_BELOW_ZERO
 
   /**
    * LED Control Menu
@@ -2103,12 +2106,8 @@
   #define BABYSTEP_DISPLAY_TOTAL          // Display total babysteps since last G28
 
   //#define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
-  //#define BABYSTEP_GLOBAL_Z               // Combine M424 Z and Babystepping
-
-  #if EITHER(BABYSTEP_ZPROBE_OFFSET, BABYSTEP_GLOBAL_Z)
-    #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
-      //#define BABYSTEP_HOTEND_Z_OFFSET    // For multiple hotends, babystep relative Z offsets
-    #endif
+  #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+    //#define BABYSTEP_HOTEND_Z_OFFSET      // For multiple hotends, babystep relative Z offsets
     //#define BABYSTEP_GFX_OVERLAY          // Enable graphical overlay on Z-offset editor
   #endif
 #endif
@@ -2573,9 +2572,17 @@
    * Extra G-code to run while executing tool-change commands. Can be used to use an additional
    * stepper motor (e.g., I axis in Configuration.h) to drive the tool-changer.
    */
-  //#define EVENT_GCODE_TOOLCHANGE_T0 "G28 A\nG1 A0" // Extra G-code to run while executing tool-change command T0
-  //#define EVENT_GCODE_TOOLCHANGE_T1 "G1 A10"       // Extra G-code to run while executing tool-change command T1
-  //#define EVENT_GCODE_TOOLCHANGE_ALWAYS_RUN        // Always execute above G-code sequences. Use with caution!
+  //#define EVENT_GCODE_TOOLCHANGE_T0 "G28 A\nG1 A0"  // Extra G-code to run while executing tool-change command T0
+  //#define EVENT_GCODE_TOOLCHANGE_T1 "G1 A10"        // Extra G-code to run while executing tool-change command T1
+  //#define EVENT_GCODE_TOOLCHANGE_ALWAYS_RUN         // Always execute above G-code sequences. Use with caution!
+
+  /**
+   * Consider coordinates for EVENT_GCODE_TOOLCHANGE_Tx as relative to T0
+   * so that moves in the specified axes are the same for all tools.
+   */
+  //#define TC_GCODE_USE_GLOBAL_X   // Use X position relative to Tool 0
+  //#define TC_GCODE_USE_GLOBAL_Y   // Use Y position relative to Tool 0
+  //#define TC_GCODE_USE_GLOBAL_Z   // Use Z position relative to Tool 0
 
   /**
    * Tool Sensors detect when tools have been picked up or dropped.
